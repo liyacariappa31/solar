@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07131d">
+  <meta name="description" content="SolarWise turns local weather and panel conditions into practical solar energy decisions.">
+  <title>SolarWise — energy, in your corner</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='solarwise.svg') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script id="chartjs-loader" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" async></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</head>
+<body>
+  <svg class="icon-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M7 14l4-4 4 3 6-7"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7m0-4V3m8 18v-9m0-4V3m8 18v-5m0-4V3M2 14h4m4-6h4m4 8h4"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20 4c-9 0-15 4-15 11a5 5 0 0 0 5 5c7 0 11-7 10-16Z"/><path d="M4 21c3-5 7-8 12-11"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .4-8A6 6 0 0 0 6 9a4.5 4.5 0 0 0 1 9Z"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s7 7.3 7 12a7 7 0 0 1-14 0c0-4.7 7-12 7-12Z"/></symbol>
+    <symbol id="i-thermo" viewBox="0 0 24 24"><path d="M14 14.8V5a3 3 0 0 0-6 0v9.8a5 5 0 1 0 6 0Z"/><path d="M11 11v6"/></symbol>
+    <symbol id="i-panel" viewBox="0 0 24 24"><path d="m3 7 2-4h14l2 4-3 13H6L3 7Z"/><path d="M5 11h14M8 3l-1 4m9-4 1 4M9 11l-1 9m7-9 1 9"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-car" viewBox="0 0 24 24"><path d="m5 11 1.5-5h11l1.5 5M3 11h18v8H3z"/><path d="M6 19v2m12-2v2M6 15h.01M18 15h.01"/></symbol>
+    <symbol id="i-wash" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13" r="5"/><path d="M8 7h.01M11 7h.01"/></symbol>
+    <symbol id="i-dish" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 0 18 0H3Z"/><path d="M5 8h14M7 5h10M12 3v2"/></symbol>
+    <symbol id="i-heat" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-4-4-6-4-11-3 2-4 4-4 7-2-1-3-3-3-3-2 2-3 5-3 7a7 7 0 0 0 7 7Z"/><path d="M12 22a3 3 0 0 0 3-3c0-2-2-3-2-5-2 1-4 3-4 5a3 3 0 0 0 3 3Z"/></symbol>
+  </svg>
+  <div class="app-shell page-dashboard">
+    <aside class="sidebar">
+      <a class="brand" href="{{ url_for('index') }}" aria-label="SolarWise home">
+        <span class="brand-mark"><svg><use href="#i-sun"/></svg></span>
+        <span>solarwise<span class="brand-period">.</span><small>ENERGY, IN YOUR CORNER</small></span>
+      </a>
+      <div class="nav-caption">WORKSPACE</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a class="nav-link active" href="{{ url_for('index') }}"><svg><use href="#i-grid"/></svg><span>Dashboard</span></a>
+        <a class="nav-link" href="{{ url_for('prediction_page') }}"><svg><use href="#i-chart"/></svg><span>Prediction</span></a>
+        <a class="nav-link" href="{{ url_for('weather_page') }}"><svg><use href="#i-cloud"/></svg><span>Weather</span></a>
+        <a class="nav-link" href="{{ url_for('insights_page') }}"><svg><use href="#i-chart"/></svg><span>Insights</span></a>
+        <a class="nav-link" href="{{ url_for('simulator_page') }}"><svg><use href="#i-sliders"/></svg><span>Simulator</span></a>
+        <a class="nav-link" href="{{ url_for('advisor_page') }}"><svg><use href="#i-leaf"/></svg><span>Advisor</span></a>
+        <a class="nav-link" href="{{ url_for('scheduler_page') }}"><svg><use href="#i-clock"/></svg><span>Scheduler</span></a>
+        <a class="nav-link" href="{{ url_for('history_page') }}"><svg><use href="#i-chart"/></svg><span>History</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="tip-card"><span class="tip-sun"><svg><use href="#i-sun"/></svg></span><p>Small shifts make<br><strong>a brighter difference.</strong></p><span class="tip-caption">YOUR SOLAR NOTE</span></div>
+        <div class="profile"><div class="profile-avatar">S</div><div><strong>My solar home</strong><span>6.5 kWp system</span></div><span class="profile-dots">•••</span></div>
+      </div>
+    </aside>
+    <main class="main-content" id="overview">
+      <header class="topbar">
+        <label class="search-box"><svg><use href="#i-search"/></svg><input id="dashboard-search" type="search" placeholder="Search anything..." autocomplete="off" aria-label="Search dashboard"><kbd>⌘ K</kbd></label>
+        <div class="topbar-right"><span class="live-status"><i></i> MODEL ONLINE</span><button class="header-icon theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" title="Switch to light mode"><svg><use href="#i-sun"/></svg></button><button class="header-icon" id="notification-button" type="button" aria-label="Notifications"><svg><use href="#i-bell"/></svg><i></i></button><span class="top-avatar">S</span></div>
+      </header>
+      <section class="page-intro">
+        <div><p class="eyebrow"><span class="eyebrow-dot"></span>YOUR SMART SOLAR DASHBOARD</p><h1>Predict <span>·</span> Optimize <span>·</span> Save</h1><p class="intro-copy">Smarter solar energy for a brighter future.</p></div>
+        <button class="date-pill" id="refresh-button"><svg><use href="#i-sun"/></svg><span>Refresh forecast</span><span class="refresh-arrow">↻</span></button>
+      </section>
+      {% include "_historical_playback.html" %}
+
+      <section class="hero-grid" aria-label="Today's solar forecast">
+        <article class="hero-card">
+          <div class="hero-card-top"><div><span class="hero-kicker"><span class="hero-live"></span><span class="generation-kicker">TODAY'S GENERATION</span></span><h2 id="generation-value">--<small> kWh</small></h2><p><span class="generation-trend">↗</span> <span id="generation-subtitle">Your AI-powered daily estimate</span></p></div><div class="sun-art" aria-hidden="true"><div class="sun-glow"></div><div class="sun-disc"></div><div class="sun-horizon"></div><div class="hill hill-back"></div><div class="hill hill-front"></div><div class="solar-array"><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
+          <div class="hero-bottom"><div class="hero-stat"><span class="stat-symbol"><svg><use href="#i-leaf"/></svg></span><div><strong id="carbon-value">-- kg</strong><small id="carbon-label">CO₂ avoided today</small></div></div><div class="hero-stat"><span class="stat-symbol outline"><svg><use href="#i-sun"/></svg></span><div><strong id="peak-value">--</strong><small id="peak-label">Peak solar window</small></div></div></div>
+          <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div>
+        </article>
+        <article class="score-card capacity-card">
+          <div class="card-heading"><div><span class="section-kicker capacity-kicker">YOUR SYSTEM</span><h3>Panel capacity</h3></div><span class="metric-icon green"><svg><use href="#i-panel"/></svg></span></div>
+          <strong class="capacity-value" id="metric-capacity">-- <small>kW</small></strong>
+          <span class="capacity-caption" id="capacity-caption">Installed solar capacity</span>
+          <span class="capacity-foot"><span class="capacity-dot"></span><span id="capacity-foot-label">Connected and ready</span></span>
+        </article>
+        <article class="score-card weather-summary-card">
+          <div class="card-heading"><div><span class="section-kicker weather-kicker">LOCAL CONDITIONS</span><h3>Weather</h3></div><span class="weather-icon"><svg><use href="#i-sun"/></svg></span></div>
+          <div class="weather-sunny"><span>☀</span><span id="cloud-caption">Sunny</span><strong id="metric-cloud">--%</strong></div>
+          <div class="weather-temperature"><svg><use href="#i-thermo"/></svg><strong id="metric-temp">-- °C</strong><span>Temperature</span></div>
+          <div class="sunlight-caption"><span class="metric-dot bright"></span><span id="metric-sun">-- W/m²</span> <span class="sunlight-caption-label">sunlight</span></div>
+        </article>
+        <article class="score-card efficiency-card">
+          <div class="card-heading"><div><span class="section-kicker performance-kicker">ROOF READINESS</span><h3 class="performance-title">Efficiency</h3></div><span class="info-dot" title="A simple score based on cloud cover and heat-related performance impact.">i</span></div>
+          <div class="score-ring" id="score-ring"><div class="score-ring-inner"><strong id="score-value">--</strong><span class="performance-score-label">OUT OF 100</span></div></div>
+          <div class="score-status"><span class="score-status-dot"></span><strong id="score-status">Calculating</strong></div>
+          <p class="score-note" id="performance-note">A quick read on how today's<br>conditions suit your panels.</p>
+          <div class="score-foot"><svg><use href="#i-check"/></svg><span id="performance-foot-label">Live model estimate</span><span class="score-foot-value" id="confidence-value">--% confidence</span></div>
+        </article>
+      </section>
+
+      <section class="content-grid dashboard-details">
+        <article class="panel-card production-card">
+          <div class="panel-header"><div><span class="section-kicker">THE DAY, IN DAYLIGHT</span><h3>Solar production curve</h3><p id="production-description">Estimated energy by hour, based on your current conditions.</p></div><div class="chart-legend"><span><i></i><span id="production-legend">Predicted generation</span></span></div></div>
+          <div class="chart-wrap"><canvas id="production-chart" aria-label="Hourly predicted solar production chart"></canvas></div>
+          <div class="chart-footnote">
+            <span><i></i><span id="production-footnote">Generation is modeled, not metered</span></span>
+            <span class="chart-footnote-legend" id="historical-chart-legend" hidden><i></i><span id="footer-production-legend">Historical energy</span></span>
+            <span id="daily-total-label">-- kWh forecast</span>
+          </div>
+        </article>
+        <article class="panel-card weather-card" id="weather-impact">
+          <div class="panel-header compact"><div><span class="section-kicker">WEATHER, TRANSLATED</span><h3>What moves the needle?</h3></div><span class="weather-icon"><svg><use href="#i-cloud"/></svg></span></div>
+          <p class="weather-explainer">A quick look at how small weather shifts change today's estimate.</p>
+          <div class="impact-list" id="impact-list"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div>
+          <div class="weather-insight"><span class="insight-mark">↗</span><p id="weather-insight-text">Your forecast will reveal the biggest opportunity.</p></div>
+        </article>
+      </section>
+
+      <footer class="page-footer"><span>SolarWise · <span id="model-context">ML model v—</span> · Estimates are planning guidance</span></footer>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+</body>
+</html>

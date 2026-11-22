@@ -1,0 +1,17 @@
+<section class="simulation-toolbar" id="historical-simulation" aria-label="Historical solar playback">
+  <div class="simulation-label">
+    <strong>SIMULATED LIVE DATA — Based on historical solar observations.</strong>
+    <span>Plant 1 output is aggregated across inverters, not this home's meter. Each 30 seconds advances to the next record; no sensors are connected.</span>
+  </div>
+  <label class="simulation-date">Select historical day to simulate
+    <select id="historical-date" disabled aria-label="Select historical day to simulate">
+      <option>Loading available dates…</option>
+    </select>
+  </label>
+  <div class="simulation-actions">
+    <button class="simulation-button simulation-play" id="playback-toggle" type="button" disabled>Start playback</button>
+    <button class="simulation-button" id="playback-restart" type="button" disabled>Replay day</button>
+    <button class="simulation-button" id="playback-stop" type="button" disabled>Return to forecast</button>
+  </div>
+  <p class="simulation-status" id="playback-status" role="status" aria-live="polite">Loading historical observations…</p>
+</section>

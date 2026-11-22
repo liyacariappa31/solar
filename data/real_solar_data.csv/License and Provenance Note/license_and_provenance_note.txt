@@ -1,0 +1,58 @@
+License and Provenance Note
+===========================
+
+Dataset title:
+Curated Solar Weather and PV AC Power Output Dataset for Explainable Solar Power Forecasting
+
+Final processed file:
+Solar_Weather_Data_Processed.csv
+
+Prepared by:
+Samiul Al Zami Alif, Rajshahi University of Engineering & Technology, Bangladesh.
+
+Provenance
+----------
+The final processed dataset was prepared from two Kaggle source inputs provided by the authors:
+
+1. Solar power generation input:
+   https://www.kaggle.com/code/pythonafroz/solar-power-generation-forecast/input
+
+2. Solar prediction / weather input:
+   https://www.kaggle.com/code/volkanarslan97/solar-prediction/input
+
+The final file, Solar_Weather_Data_Processed.csv, is a curated and processed derivative dataset prepared for machine learning experiments. It contains hourly weather/solar features and PV AC output values for supervised solar power forecasting.
+
+Important academic wording
+--------------------------
+The dataset should not be described as a fully original raw field-measured dataset created entirely by the authors. It should be described as a curated and processed dataset derived from publicly available Kaggle source data.
+
+Recommended wording:
+"The dataset used in this study was prepared by integrating publicly available PV generation and solar-weather datasets obtained from Kaggle. The final processed dataset and preprocessing code were deposited in Mendeley Data to support reproducibility."
+
+License guidance before publication
+-----------------------------------
+Before selecting the Mendeley license, verify the license shown on each original Kaggle source page or source dataset page. The Mendeley license should be compatible with the original source licenses.
+
+Use this rule:
+- If both original Kaggle datasets are CC0, a CC0 or CC BY 4.0 Mendeley license is usually acceptable.
+- If either original dataset is CC BY, retain attribution and use CC BY 4.0 or another compatible attribution license.
+- If either original dataset is CC BY-NC, do not publish the derivative under a commercial-use license.
+- If either original dataset has No Derivatives (ND) restrictions, do not publish a modified merged dataset without permission.
+- If the license is unknown or missing, do not claim unrestricted reuse. Publish the preprocessing code and final research data only after confirming permission.
+
+Mendeley Data DOI
+-----------------
+The current reserved DOI shown by Mendeley is:
+10.17632/kpx4yd6z3.1
+
+Use this DOI in the manuscript only after the Mendeley record is published and the DOI is active.
+
+Recommended Data Availability statement
+---------------------------------------
+"The processed dataset used in this study, together with the preprocessing code and data dictionary, is available in Mendeley Data: Alif, S. A. Z. (2026), 'Curated Solar Weather and PV AC Power Output Dataset for Explainable Solar Power Forecasting', Mendeley Data, V1, DOI: 10.17632/kpx4yd6z3.1. The dataset was prepared from publicly available Kaggle PV generation and solar-weather source data, which are cited in the manuscript."
+
+File integrity hashes
+---------------------
+Plant_1_Generation_Data.csv: 882f75f1c295946633617646cc92343ddb6fb821a2546c82f7e5cc737a13624e
+SolarPrediction.csv: d6033248e8292e2feae20ebb7b26232542886998097161bbcc5fbb103c9a32ef
+Solar_Weather_Data_Processed.csv: 89321b3c0daa47ef8ee5ff90218c2b5f72899fb8323a374bfac839c83ac0eeb5
