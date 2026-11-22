@@ -897,20 +897,21 @@ html:has(.page-dashboard), body:has(.page-dashboard) {
 .prediction-note-card .primary-button { width: fit-content; margin-top: 22px; padding: 0 15px; font-size: 11px; text-decoration: none; }
 .simulator-page-content .lab-card { min-height: 360px; padding: 24px; }
 .simulator-page-content .lab-heading { margin-bottom: 28px; }
-.simulator-page-content .lab-heading h3 { font-size: 19px; }
-.simulator-page-content .lab-heading p { font-size: 11px; }
+.simulator-page-content .lab-heading h3 { font-size: 22px; }
+.simulator-page-content .lab-heading p { font-size: 14px; line-height: 1.5; }
+.simulator-page-content .lab-badge { font-size: 10px; }
 .simulator-page-content .input-grid { gap: 22px; }
-.simulator-page-content .input-field { gap: 9px; font-size: 12px; }
-.simulator-page-content .input-control { height: 42px; }
-.simulator-page-content .input-control input { font-size: 13px; }
-.simulator-page-content .input-suffix { font-size: 11px; }
-.simulator-page-content .lab-actions { padding-top: 14px; }
+.simulator-page-content .input-field { gap: 9px; font-size: 15px; }
+.simulator-page-content .input-field > span:first-child small { font-size: 12px; }
+.simulator-page-content .input-control { height: 46px; }
+.simulator-page-content .input-control input { font-size: 15px; }
+.simulator-page-content .lab-actions { justify-content: flex-end; padding-top: 14px; }
 .simulator-page-content .simulation-result { font-size: 14px; line-height: 1.5; }
 .simulator-page-content .primary-button, .simulator-page-content .secondary-button { height: 40px; padding: 0 14px; font-size: 11px; }
 .simulation-output-card > strong { display: block; margin: 26px 0 6px; color: #edf7f4; font: 700 34px var(--font-display); }
-.simulation-output-card > p { margin: 0 0 24px; color: #91a9ac; font-size: 11px; }
-.output-detail { display: flex; justify-content: space-between; gap: 10px; padding: 13px 0; border-top: 1px solid #1b3640; color: #a4b9b9; font-size: 11px; }
-.output-detail strong { color: #70dcaa; text-align: right; }
+.simulation-output-card > p { margin: 0 0 24px; color: #91a9ac; font-size: 14px; line-height: 1.5; }
+.output-detail { display: flex; justify-content: space-between; gap: 10px; padding: 13px 0; border-top: 1px solid #1b3640; color: #a4b9b9; font-size: 14px; }
+.output-detail strong { color: #70dcaa; font-size: 15px; text-align: right; }
 .advisor-page-content .section-feature-card { min-height: 400px; padding: 26px; }
 .advisor-page-content .advisor-card h3 { margin: 19px 0 9px; font-size: 26px; }
 .advisor-page-content .advisor-intro { max-width: 560px; margin-bottom: 25px; font-size: 13px; }
@@ -1221,8 +1222,8 @@ html[data-theme="light"] .skeleton-line { background: linear-gradient(90deg, #e4
 .insight-tool-card .panel-header h3, .insight-history-card .panel-header h3 { font-size: 18px; }
 .insight-tool-card .panel-header p, .insight-history-card .panel-header p { max-width: 470px; font-size: 12px; line-height: 1.55; }
 .insight-form { display: grid; gap: 12px; margin-top: 10px; }
-.insight-field { display: grid; gap: 6px; color: #dce8e7; font-size: 13px; font-weight: 600; }
-.insight-field > span { color: #91a7a7; font-size: 11px; font-weight: 400; }
+.insight-field { display: grid; gap: 6px; color: #dce8e7; font-size: 14px; font-weight: 600; }
+.insight-field > span { color: #91a7a7; font-size: 13px; font-weight: 400; line-height: 1.4; }
 .insight-field input, .insight-field select { width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid #27424a; border-radius: 7px; outline: none; color: #eef7f4; background: #091a23; font: inherit; }
 .insight-field input:focus, .insight-field select:focus { border-color: #39c995; box-shadow: 0 0 0 3px rgb(57 201 149 / 14%); }
 .insight-actions { display: flex; flex-wrap: wrap; gap: 9px; }
@@ -1489,11 +1490,12 @@ html[data-theme="light"] .simulation-status.is-complete { color: #286347; }
 .monthly-report-controls input, .monthly-report-controls select { min-width: 112px; height: 36px; padding: 0 9px; border: 1px solid #294c4a; border-radius: 6px; color: #e4f1ed; background: #0a1a22; font: 13px var(--font-body); }
 .monthly-report-controls .secondary-button { min-height: 36px; }
 .monthly-report-note { margin: 8px 0 12px; color: #97b0ac; font-size: 12px; line-height: 1.5; }
-.monthly-report-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.monthly-report-month { min-width: 0; padding: 13px; border: 1px solid #1c3a40; border-radius: 8px; background: #0a1a22; }
+.monthly-report-card { display: flex; flex-direction: column; }
+.monthly-report-list { display: grid; flex: 1 1 auto; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: stretch; gap: 10px; }
+.monthly-report-month { display: flex; min-width: 0; flex-direction: column; padding: 13px; border: 1px solid #1c3a40; border-radius: 8px; background: #0a1a22; }
 .monthly-report-month h4 { margin: 0; color: #d7ed9c; font: 700 15px var(--font-heading); }
 .monthly-report-coverage { margin: 5px 0 11px; color: #97b0ac; font-size: 11px; line-height: 1.45; }
-.monthly-report-month dl { display: grid; gap: 8px; margin: 0; }
+.monthly-report-month dl { display: grid; flex: 1 1 auto; align-content: space-between; gap: 8px; margin: 0; }
 .monthly-report-month dl > div { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; }
 .monthly-report-month dt { color: #a4b9b8; }
 .monthly-report-month dd { margin: 0; color: #e4f1ed; font-weight: 700; text-align: right; }
@@ -1529,4 +1531,33 @@ html[data-theme="light"] .monthly-report-controls input, html[data-theme="light"
   .monthly-report-controls label { flex: 1 1 42%; }
   .monthly-report-controls input, .monthly-report-controls select { width: 100%; }
   .monthly-report-controls .secondary-button { flex: 1 1 100%; }
+}
+
+html .app-shell .section-kicker,
+html .app-shell .hero-kicker,
+html .app-shell .eyebrow {
+  font-size: clamp(10px, 0.85vw, 12px);
+  letter-spacing: 0.9px;
+  line-height: 1.35;
+}
+
+.page-dashboard .weather-card .section-kicker { font-size: clamp(11px, 0.75vw, 13px); }
+.page-dashboard .weather-card .panel-header h3 { font-size: clamp(21px, 1.35vw, 24px); }
+.page-dashboard .weather-card .weather-explainer { font-size: clamp(14px, 0.95vw, 16px); }
+.page-dashboard .weather-card .impact-copy strong { font-size: clamp(15px, 1vw, 17px); }
+.page-dashboard .weather-card .impact-copy small,
+.page-dashboard .weather-card .impact-change { font-size: clamp(12px, 0.85vw, 14px); }
+.page-dashboard .weather-card .impact-value { font-size: clamp(18px, 1.15vw, 20px); }
+.page-dashboard .weather-card .weather-insight p { font-size: clamp(13px, 0.9vw, 15px); }
+.page-dashboard .weather-card .impact-icon { width: 30px; height: 30px; }
+
+@media (max-width: 620px) {
+  .page-dashboard .weather-card .panel-header h3 { font-size: 19px; }
+  .page-dashboard .weather-card .weather-explainer { font-size: 14px; }
+  .page-dashboard .weather-card .impact-row { min-height: 58px; }
+  .page-dashboard .weather-card .impact-copy strong { font-size: 15px; }
+  .page-dashboard .weather-card .impact-copy small,
+  .page-dashboard .weather-card .impact-change { font-size: 12px; }
+  .page-dashboard .weather-card .impact-value { font-size: 17px; }
+  .page-dashboard .weather-card .weather-insight p { font-size: 13px; }
 }

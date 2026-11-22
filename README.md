@@ -54,6 +54,8 @@ Flask's development server is intended for local use. Set `debug=False` before e
 
 The dashboard links to dedicated `/prediction`, `/weather`, `/insights`, `/simulator`, `/advisor`, `/scheduler`, and `/history` pages. Simulator inputs persist while navigating between pages in the same browser tab, and the theme choice is saved across visits.
 
+On Vercel, the model cache and SQLite database use temporary function storage. Saved forecast and insight history is not durable across function restarts; use a persistent database for production history.
+
 ## API
 
 - `GET /api/health` — model status and version.

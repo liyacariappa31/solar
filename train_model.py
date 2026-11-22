@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import csv
+import os
 import random
+import tempfile
 from pathlib import Path
 
 import joblib
@@ -15,7 +17,11 @@ from sklearn.metrics import mean_absolute_error, r2_score
 
 ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
-MODEL_DIR = ROOT / "models"
+MODEL_DIR = (
+    Path(tempfile.gettempdir()) / "solarwise-models"
+    if os.getenv("VERCEL")
+    else ROOT / "models"
+)
 DATASET_PATH = DATA_DIR / "solar_training_data.csv"
 MODEL_PATH = MODEL_DIR / "solar_yield_model.joblib"
 FEATURES = [

@@ -6,6 +6,8 @@ import json
 import sqlite3
 import csv
 import calendar
+import os
+import tempfile
 from collections import Counter
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
@@ -51,7 +53,11 @@ CURRENCY_SYMBOLS = {"INR": "₹", "USD": "$", "EUR": "€", "GBP": "£"}
 GRID_CO2_KG_PER_KWH = 0.42
 
 app = Flask(__name__)
-app.config["DATABASE"] = str(ROOT / "instance" / "solarwise.db")
+app.config["DATABASE"] = str(
+    Path(tempfile.gettempdir()) / "solarwise.db"
+    if os.getenv("VERCEL")
+    else ROOT / "instance" / "solarwise.db"
+)
 app.config["HISTORICAL_DATASET"] = str(HISTORICAL_DATASET_PATH)
 app.config["JSON_SORT_KEYS"] = False
 

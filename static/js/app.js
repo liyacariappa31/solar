@@ -301,11 +301,9 @@ function renderForecast(data, { simulation = false, saved = false } = {}) {
       result.textContent = `Scenario: ${safeNumber(data.generation_kwh, 2)} kWh/day.${comparisonText} ${safeNumber(data.carbon_avoided_kg)} kg CO₂ avoided. Not saved to history.`;
       result.classList.add("visible");
     }
-    setText("#scenario-label", "What-if scenario");
   } else {
     baselineForecast = data;
     result?.classList.remove("visible");
-    setText("#scenario-label", saved ? "Current conditions · saved to history" : "Current conditions");
   }
 }
 

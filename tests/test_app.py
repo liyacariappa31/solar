@@ -392,6 +392,20 @@ class SolarWiseApiTests(unittest.TestCase):
                 self.assertEqual(response.status_code, 200)
                 self.assertIn(heading.encode(), response.data)
 
+    def test_dashboard_omits_production_curve_but_prediction_keeps_it(self):
+        dashboard = self.client.get("/")
+        prediction = self.client.get("/prediction")
+
+        self.assertNotIn(b"Solar production curve", dashboard.data)
+        self.assertIn(b"Hourly solar production", prediction.data)
+        self.assertIn(b'id="production-chart"', prediction.data)
+
+    def test_simulator_omits_suffixes_and_current_conditions_label(self):
+        simulator = self.client.get("/simulator")
+
+        self.assertNotIn(b' class="input-suffix"', simulator.data)
+        self.assertNotIn(b"Current conditions", simulator.data)
+
     def test_prediction_and_history_explain_their_data_sources(self):
         prediction = self.client.get("/prediction")
         history = self.client.get("/history")
