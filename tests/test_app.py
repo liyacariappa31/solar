@@ -129,6 +129,15 @@ class SolarWiseApiTests(unittest.TestCase):
         self.assertEqual(len(day["hourly"]), 24)
         self.assertTrue(all("generation_kwh" in point for point in day["hourly"]))
 
+    def test_historical_day_reports_approximate_plant_capacity_from_source_peak(self):
+        response = self.client.get("/api/simulation/day?date=2020-06-02")
+        self.assertEqual(response.status_code, 200)
+        day = response.get_json()
+        source_peak = max(
+            record["ac_power_kw"] for record in solar_app.load_historical_records()
+        )
+        self.assertEqual(day["estimated_plant_capacity_kwp"], round(source_peak * 1.1, 2))
+
     def test_scheduler_snapshots_match_each_historical_record(self):
         response = self.client.get(
             "/api/simulation/day?date=2020-05-15&include_scheduler=1"
@@ -335,12 +344,26 @@ class SolarWiseApiTests(unittest.TestCase):
     def test_weather_risk_scenario_and_invalid_types(self):
         response = self.client.post(
             "/api/insights/weather-risk",
-            json={**solar_app.DEFAULT_INPUTS, "rain_scenario": "heavy"},
+            json={
+                **solar_app.DEFAULT_INPUTS,
+                "cloud_coverage": 63,
+                "temperature": 40,
+                "rain_scenario": "heavy",
+            },
         )
         self.assertEqual(response.status_code, 200)
         body = response.get_json()
         self.assertIn(body["risk_level"], {"low", "moderate", "high"})
-        self.assertIn("not a live weather alert", body["disclaimer"])
+        self.assertIn("conditions entered", body["disclaimer"])
+        self.assertTrue(any("High cloud warning" in alert for alert in body["alerts"]))
+        self.assertTrue(any("Extreme-heat warning" in alert for alert in body["alerts"]))
+        self.assertTrue(any("Heavy-rain scenario" in alert for alert in body["alerts"]))
+
+        dashboard = self.client.get("/")
+        insights = self.client.get("/insights")
+        self.assertNotIn(b">Weather</span>", dashboard.data)
+        self.assertNotIn(b">Weather</span>", insights.data)
+        self.assertIn(b"scenario input", insights.data)
 
         invalid_rain = self.client.post(
             "/api/insights/weather-risk",

@@ -46,11 +46,10 @@
       <nav class="main-nav" aria-label="Main navigation">
         <a class="nav-link active" href="{{ url_for('index') }}"><svg><use href="#i-grid"/></svg><span>Dashboard</span></a>
         <a class="nav-link" href="{{ url_for('prediction_page') }}"><svg><use href="#i-chart"/></svg><span>Prediction</span></a>
-        <a class="nav-link" href="{{ url_for('weather_page') }}"><svg><use href="#i-cloud"/></svg><span>Weather</span></a>
         <a class="nav-link" href="{{ url_for('insights_page') }}"><svg><use href="#i-chart"/></svg><span>Insights</span></a>
+        <a class="nav-link" href="{{ url_for('scheduler_page') }}"><svg><use href="#i-clock"/></svg><span>Scheduler</span></a>
         <a class="nav-link" href="{{ url_for('simulator_page') }}"><svg><use href="#i-sliders"/></svg><span>Simulator</span></a>
         <a class="nav-link" href="{{ url_for('advisor_page') }}"><svg><use href="#i-leaf"/></svg><span>Advisor</span></a>
-        <a class="nav-link" href="{{ url_for('scheduler_page') }}"><svg><use href="#i-clock"/></svg><span>Scheduler</span></a>
         <a class="nav-link" href="{{ url_for('history_page') }}"><svg><use href="#i-chart"/></svg><span>History</span></a>
       </nav>
       <div class="sidebar-bottom">
@@ -97,6 +96,12 @@
       </section>
 
       <section class="content-grid dashboard-details">
+        <article class="panel-card weather-card" id="weather-impact">
+          <div class="panel-header compact"><div><span class="section-kicker">WEATHER, TRANSLATED</span><h3>What moves the needle?</h3></div><span class="weather-icon"><svg><use href="#i-cloud"/></svg></span></div>
+          <p class="weather-explainer">A quick look at how small weather shifts change today's estimate.</p>
+          <div class="impact-list" id="impact-list"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div>
+          <div class="weather-insight"><span class="insight-mark">↗</span><p id="weather-insight-text">Your forecast will reveal the biggest opportunity.</p></div>
+        </article>
         <article class="panel-card production-card">
           <div class="panel-header"><div><span class="section-kicker">THE DAY, IN DAYLIGHT</span><h3>Solar production curve</h3><p id="production-description">Estimated energy by hour, based on your current conditions.</p></div><div class="chart-legend"><span><i></i><span id="production-legend">Predicted generation</span></span></div></div>
           <div class="chart-wrap"><canvas id="production-chart" aria-label="Hourly predicted solar production chart"></canvas></div>
@@ -105,12 +110,6 @@
             <span class="chart-footnote-legend" id="historical-chart-legend" hidden><i></i><span id="footer-production-legend">Historical energy</span></span>
             <span id="daily-total-label">-- kWh forecast</span>
           </div>
-        </article>
-        <article class="panel-card weather-card" id="weather-impact">
-          <div class="panel-header compact"><div><span class="section-kicker">WEATHER, TRANSLATED</span><h3>What moves the needle?</h3></div><span class="weather-icon"><svg><use href="#i-cloud"/></svg></span></div>
-          <p class="weather-explainer">A quick look at how small weather shifts change today's estimate.</p>
-          <div class="impact-list" id="impact-list"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div>
-          <div class="weather-insight"><span class="insight-mark">↗</span><p id="weather-insight-text">Your forecast will reveal the biggest opportunity.</p></div>
         </article>
       </section>
 

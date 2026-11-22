@@ -788,6 +788,9 @@ def historical_simulation_day():
         ),
         "observation_count": len(day_records),
         "peak_ac_power_kw": round(peak_record["ac_power_kw"], 2),
+        "estimated_plant_capacity_kwp": round(
+            max(record["ac_power_kw"] for record in records) * 1.1, 2
+        ),
         "peak_timestamp": peak_record["timestamp"],
         "hourly": hourly,
         "records": day_records,
@@ -1227,20 +1230,32 @@ def solar_weather_risk():
     risk_percent = round(total_loss / generation * 100, 1) if generation > 0 else 0.0
     risk_level = "high" if risk_percent >= 30 else "moderate" if risk_percent >= 12 else "low"
     alerts: list[str] = []
-    if inputs["cloud_coverage"] >= 20:
+    if inputs["cloud_coverage"] >= 60:
         alerts.append(
-            f"{inputs['cloud_coverage']:.0f}% cloud cover is associated with an estimated {cloud_loss:.2f} kWh/day difference from the clear-sky model scenario."
+            f"High cloud warning: {inputs['cloud_coverage']:.0f}% cloud cover may lower solar output by about {cloud_loss:.2f} kWh/day versus clear-sky conditions."
         )
-    if inputs["temperature"] >= 32:
+    elif inputs["cloud_coverage"] >= 20:
         alerts.append(
-            f"High ambient temperature ({inputs['temperature']:.0f} °C) may reduce output by about {heat_loss:.2f} kWh/day versus the 25 °C model scenario."
+            f"Cloud warning: {inputs['cloud_coverage']:.0f}% cloud cover may lower solar output by about {cloud_loss:.2f} kWh/day versus clear-sky conditions."
         )
-    if rain_scenario != "none":
+    if inputs["temperature"] >= 40:
         alerts.append(
-            f"The selected {rain_scenario}-rain scenario includes an illustrative {rain_fraction * 100:.0f}% short-term allowance ({rain_loss:.2f} kWh); actual rain effects vary and may rinse dust."
+            f"Extreme-heat warning: {inputs['temperature']:.0f} °C is above the model's 25 °C reference; estimated heat-related output difference is {heat_loss:.2f} kWh/day."
+        )
+    elif inputs["temperature"] >= 32:
+        alerts.append(
+            f"Heat warning: {inputs['temperature']:.0f} °C is above the model's 25 °C reference; estimated heat-related output difference is {heat_loss:.2f} kWh/day."
+        )
+    if rain_scenario == "heavy":
+        alerts.append(
+            f"Heavy-rain scenario: an illustrative {rain_fraction * 100:.0f}% short-term allowance adds {rain_loss:.2f} kWh/day of estimated impact; actual effects vary."
+        )
+    elif rain_scenario == "light":
+        alerts.append(
+            f"Light-rain scenario: an illustrative {rain_fraction * 100:.0f}% short-term allowance adds {rain_loss:.2f} kWh/day of estimated impact; actual effects vary."
         )
     if not alerts:
-        alerts.append("No major risk condition is selected in the current weather scenario.")
+        alerts.append("No significant solar-output warning is indicated for the selected conditions.")
 
     result = {
         "generation_kwh": generation,
@@ -1255,8 +1270,8 @@ def solar_weather_risk():
         "risk_level": risk_level,
         "alerts": alerts,
         "disclaimer": (
-            "Scenario estimate only—not a live weather alert. No live weather service is "
-            "connected; rain impact is an illustrative assumption, not a forecast."
+            "Weather warnings are estimates based on the conditions entered; rain impact "
+            "is illustrative and actual effects vary."
         ),
     }
     result["record_id"] = save_insight_record("weather_risk", result)

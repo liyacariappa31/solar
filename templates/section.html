@@ -47,11 +47,10 @@
       <nav class="main-nav" aria-label="Main navigation">
         <a class="nav-link" href="{{ url_for('index') }}"><svg><use href="#i-grid"/></svg><span>Dashboard</span></a>
         <a class="nav-link {% if page == 'prediction' %}active{% endif %}" href="{{ url_for('prediction_page') }}"><svg><use href="#i-chart"/></svg><span>Prediction</span></a>
-        <a class="nav-link {% if page == 'weather' %}active{% endif %}" href="{{ url_for('weather_page') }}"><svg><use href="#i-cloud"/></svg><span>Weather</span></a>
         <a class="nav-link {% if page == 'insights' %}active{% endif %}" href="{{ url_for('insights_page') }}"><svg><use href="#i-chart"/></svg><span>Insights</span></a>
+        <a class="nav-link {% if page == 'scheduler' %}active{% endif %}" href="{{ url_for('scheduler_page') }}"><svg><use href="#i-clock"/></svg><span>Scheduler</span></a>
         <a class="nav-link {% if page == 'simulator' %}active{% endif %}" href="{{ url_for('simulator_page') }}"><svg><use href="#i-sliders"/></svg><span>Simulator</span></a>
         <a class="nav-link {% if page == 'advisor' %}active{% endif %}" href="{{ url_for('advisor_page') }}"><svg><use href="#i-leaf"/></svg><span>Advisor</span></a>
-        <a class="nav-link {% if page == 'scheduler' %}active{% endif %}" href="{{ url_for('scheduler_page') }}"><svg><use href="#i-clock"/></svg><span>Scheduler</span></a>
         <a class="nav-link {% if page == 'history' %}active{% endif %}" href="{{ url_for('history_page') }}"><svg><use href="#i-chart"/></svg><span>History</span></a>
       </nav>
       <div class="sidebar-bottom">
@@ -82,7 +81,7 @@
             <div class="weather-large-sun">☀</div>
             <h2 id="cloud-caption">Local outlook</h2>
             <div class="weather-today-metrics"><span><svg><use href="#i-sun"/></svg><strong id="metric-sun">-- W/m²</strong><small class="sunlight-caption-label">Sunlight intensity</small></span><span><svg><use href="#i-thermo"/></svg><strong id="metric-temp">-- °C</strong><small class="temperature-caption-label">Temperature</small></span><span><svg><use href="#i-cloud"/></svg><strong id="metric-cloud">--%</strong><small class="cloud-caption-label">Cloud cover</small></span></div>
-            <p class="weather-disclaimer">Weather scenarios are estimated from your inputs. No live weather service is connected.</p>
+            <p class="weather-disclaimer">Weather summaries use the conditions entered in your solar scenario.</p>
           </article>
         </section>
         {% elif page == 'prediction' %}
@@ -143,7 +142,7 @@
         {% elif page == 'insights' %}
         <div class="insight-dashboard" id="insight-dashboard">
           <div class="insight-disclaimer" role="note">
-            <strong>Transparent estimates:</strong> SolarWise has no inverter connection or live weather feed. Entered readings are unverified, demo readings are simulated, and weather/rain alerts below are scenarios—not live detections.
+            <strong>Transparent estimates:</strong> Entered readings and weather conditions are used to estimate solar performance. Weather warnings are based on the scenarios you select, not verified observations.
           </div>
           <section class="insights-grid" aria-label="Solar health and savings tools">
             <article class="panel-card insight-tool-card">
@@ -173,11 +172,11 @@
               <div class="insight-result" id="savings-result" aria-live="polite"></div>
             </article>
             <article class="panel-card insight-tool-card">
-              <div class="panel-header"><div><span class="section-kicker">SOLAR WEATHER RISK</span><h3>Explore weather scenarios</h3><p>Adjust conditions to estimate possible daily generation losses.</p></div></div>
+              <div class="panel-header"><div><span class="section-kicker">SOLAR WEATHER RISK</span><h3>Explore weather scenarios</h3><p>Adjust conditions to see estimated solar-output warnings and daily generation losses.</p></div></div>
               <form id="weather-risk-form" class="insight-form">
                 <label class="insight-field">Cloud coverage <span>% · scenario input</span><input name="cloud_coverage" type="number" min="0" max="100" step="1" data-forecast-input="cloud_coverage" required></label>
                 <label class="insight-field">Temperature <span>°C · scenario input</span><input name="temperature" type="number" min="-20" max="60" step="1" data-forecast-input="temperature" required></label>
-                <label class="insight-field">Rain scenario <span>not a live forecast</span><select name="rain_scenario"><option value="none">No rain selected</option><option value="light">Possible light rain</option><option value="heavy">Possible heavy rain</option></select></label>
+                <label class="insight-field">Rain scenario <span>scenario input</span><select name="rain_scenario"><option value="none">No rain selected</option><option value="light">Possible light rain</option><option value="heavy">Possible heavy rain</option></select></label>
                 <button class="primary-button" type="submit">Check scenario risk</button>
               </form>
               <div class="insight-result" id="weather-risk-result" aria-live="polite"></div>

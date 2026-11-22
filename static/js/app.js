@@ -134,9 +134,10 @@ function restoreForecastLabels() {
   setText(".capacity-kicker", "YOUR SYSTEM");
   setText("#capacity-caption", "Installed solar capacity");
   setText("#capacity-foot-label", "Connected and ready");
+  setText(".capacity-card h3", "Panel capacity");
   setText(".weather-kicker", "LOCAL CONDITIONS");
   setText(".weather-today-card > .section-kicker", "TODAY'S CONDITIONS");
-  setText(".weather-disclaimer", "Weather scenarios are estimated from your inputs. No live weather service is connected.");
+  setText(".weather-disclaimer", "Weather summaries use the conditions entered in your solar scenario.");
   setText(".sunlight-caption-label", "sunlight");
   setText(".temperature-caption-label", "Temperature");
   setText(".cloud-caption-label", "Cloud cover");
@@ -144,6 +145,7 @@ function restoreForecastLabels() {
   setText(".performance-title", "Efficiency");
   setText(".performance-score-label", "OUT OF 100");
   setText("#performance-note", "A quick read on how today's conditions suit your panels.");
+  document.querySelector("#performance-note")?.removeAttribute("hidden");
   setText("#performance-foot-label", "Live model estimate");
   setText("#production-description", "Estimated energy by hour, based on your current conditions.");
   setText("#production-legend", "Predicted generation");
@@ -377,7 +379,7 @@ function renderHistoricalImpacts(record) {
     row.append(mark, copy, amount);
     return row;
   }));
-  setText("#weather-insight-text", "Cloud coverage and live weather are not included in this historical dataset.");
+  setText("#weather-insight-text", "Historical records include temperature and irradiation; cloud coverage is not included.");
   setText(".weather-explainer", "Conditions recorded alongside the selected historical generation sample.");
   setText("#weather-description", "Recorded weather fields from the selected historical sample.");
 }
@@ -421,6 +423,7 @@ function renderHistoricalRecord(day, index, scheduler) {
   const peak = day.records.reduce((best, sample) =>
     sample.ac_power_kw > best.ac_power_kw ? sample : best, day.records[0]);
   const peakPower = day.peak_ac_power_kw ?? peak.ac_power_kw;
+  const estimatedPlantCapacityMwp = day.estimated_plant_capacity_kwp / 1000;
   const peakRatio = peakPower > 0
     ? Math.max(0, Math.min(100, Math.round(record.ac_power_kw / peakPower * 100)))
     : 0;
@@ -444,13 +447,14 @@ function renderHistoricalRecord(day, index, scheduler) {
   setText("#output-carbon-value", `${fixedNumber(record.module_temperature_c, 1)} °C`);
   setText("#output-confidence-label", "Historical source");
   setText("#confidence-value", "Plant 1 dataset");
-  setText("#metric-capacity", "N/A");
-  setText(".capacity-kicker", "SOURCE DATA");
-  setText("#capacity-caption", "Household capacity is not recorded.");
-  setText("#capacity-foot-label", "No live system connection");
+  setHTML("#metric-capacity", `~${safeNumber(estimatedPlantCapacityMwp, 1)} <small>MWp</small>`);
+  setText(".capacity-kicker", "PLANT-SCALE ESTIMATE");
+  setText(".capacity-card h3", "Plant capacity");
+  setText("#capacity-caption", "Estimated at 110% of the recorded peak output.");
+  setText("#capacity-foot-label", "Plant 1 estimate · not household capacity");
   setText(".weather-kicker", "HISTORICAL WEATHER");
   setText(".weather-today-card > .section-kicker", "HISTORICAL CONDITIONS");
-  setText(".weather-disclaimer", "Recorded Plant 1 weather fields only; cloud coverage and live weather are unavailable.");
+  setText(".weather-disclaimer", "Recorded Plant 1 weather readings; cloud coverage is not included.");
   setText("#metric-sun", safeNumber(record.irradiation, 3));
   setText(".sunlight-caption-label", "recorded irradiation");
   setHTML("#metric-temp", `${fixedNumber(record.ambient_temperature_c, 1)} <small>°C</small>`);
@@ -463,7 +467,7 @@ function renderHistoricalRecord(day, index, scheduler) {
   setText(".performance-score-label", "OF DAY PEAK");
   setText("#score-value", peakRatio);
   setText("#score-status", `${peakRatio}% of selected day's peak`);
-  setText("#performance-note", "Compares this sample's AC power with the highest recorded sample from the complete selected date.");
+  document.querySelector("#performance-note")?.setAttribute("hidden", "hidden");
   setText("#performance-foot-label", "Historical record");
   document.querySelectorAll("#score-ring").forEach((ring) => {
     ring.style.background = `conic-gradient(#31d49a 0deg ${peakRatio * 3.6}deg, #16363b ${peakRatio * 3.6}deg 360deg)`;
@@ -487,7 +491,7 @@ function renderHistoricalRecord(day, index, scheduler) {
   renderHistoricalImpacts(record);
   renderHistoricalAdvice(record, dailyEnergy);
   renderSchedule(scheduler);
-  document.querySelectorAll("#forecast-form input, #forecast-form button, #insight-dashboard form input, #insight-dashboard form select, #insight-dashboard form button").forEach((element) => {
+  document.querySelectorAll("#insight-dashboard form input, #insight-dashboard form select, #insight-dashboard form button").forEach((element) => {
     element.disabled = true;
   });
   document.querySelector("#refresh-button")?.setAttribute("disabled", "disabled");
@@ -561,10 +565,7 @@ async function loadHistory() {
 if (form) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (historicalPlayback?.active) {
-      showToast("Stop historical playback before saving a model forecast.");
-      return;
-    }
+    if (historicalPlayback?.active && !(await stopHistoricalPlayback())) return;
     if (!form.reportValidity()) return;
     const button = form.querySelector("button[type=submit]");
     button.disabled = true;
@@ -580,12 +581,9 @@ if (form) {
   });
 
   document.querySelector("#simulate-button").addEventListener("click", async (event) => {
-    if (historicalPlayback?.active) {
-      showToast("Stop historical playback before comparing a model scenario.");
-      return;
-    }
-    if (!form.reportValidity()) return;
     const button = event.currentTarget;
+    if (historicalPlayback?.active && !(await stopHistoricalPlayback())) return;
+    if (!form.reportValidity()) return;
     button.disabled = true;
     try {
       await requestForecast(valuesFromForm(), { simulate: true });
@@ -1196,7 +1194,8 @@ document.querySelector("#playback-restart")?.addEventListener("click", async () 
   }
 });
 
-document.querySelector("#playback-stop")?.addEventListener("click", async () => {
+async function stopHistoricalPlayback() {
+  if (!historicalPlayback?.active) return true;
   clearPlaybackTimer();
   const previousState = historicalPlayback;
   historicalPlayback = { ...historicalPlayback, active: false, playing: false, completed: false, index: -1 };
@@ -1205,6 +1204,7 @@ document.querySelector("#playback-stop")?.addEventListener("click", async () => 
     currentHistoricalRecord = undefined;
     saveHistoricalPlayback();
     updatePlaybackControls();
+    return true;
   } catch (error) {
     historicalPlayback = { ...previousState, playing: false };
     if (historicalDay && historicalPlayback.index >= 0) {
@@ -1217,8 +1217,11 @@ document.querySelector("#playback-stop")?.addEventListener("click", async () => 
     saveHistoricalPlayback();
     updatePlaybackControls();
     setPlaybackStatus(`Could not restore the model forecast: ${error.message}`, "error");
+    return false;
   }
-});
+}
+
+document.querySelector("#playback-stop")?.addEventListener("click", stopHistoricalPlayback);
 
 async function loadInsightHistory() {
   if (!insightHistoryList) return;
